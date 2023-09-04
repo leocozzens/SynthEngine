@@ -1,6 +1,7 @@
 CC = gcc
 EXT = c
 CFLAGS = -Iinclude -g -Wall
+LFLAGS =
 SRC = src
 OBJ = obj
 BINDIR = bin
@@ -20,7 +21,7 @@ release: CFLAGS = -Iinclude -O2
 release: new
 
 $(BIN): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $@ -lncurses
+	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LFLAGS)
 
 $(OBJ)/%.o: $(SRC)/%.$(EXT)
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -29,7 +30,7 @@ $(OBJ)/%.o: $(SRC)/%.$(EXT)
 	$(CC) $(CFLAGS) -c $< -o $(OBJ)/$@	
 
 link: $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(BIN)
+	$(CC) $(CFLAGS) $(OBJS) -o $(BIN) $(LFLAGS)
 
 clean:
 	rm -r $(BINDIR) $(OBJ)
