@@ -51,14 +51,8 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-# VSCode JSON files
-.vscode/
+# VSCode settings
+.VSCode
 
-# Exclude bundled executables
-*.zip
-
-# Test text files
-*.test
-
-# Binaries
-*.bin
+# CMake build directory
+build/
