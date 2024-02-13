@@ -1,10 +1,15 @@
 # CMake version settings
-cmake_minimum_required(VERSION 3.27.9)
+cmake_minimum_required(VERSION 3.25.1)
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.18)
     cmake_policy(SET CMP0135 NEW)
 endif()
 # Project data
-project(DeepCore VERSION 0.1.0 LANGUAGES C)
+project(DynamiComposer VERSION 0.1.0 LANGUAGES C)
+
+# User options
+option(DC_BUILD_TESTS "Enable tests" OFF)
+option(DC_BUILD_EXAMPLES "Build example executables" OFF)
+option(DC_BUILD_APPS "Build executables" ON)
 
 # General build settings
 set(CMAKE_C_STANDARD 17)
@@ -22,7 +27,7 @@ message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 set(SRC_DIR src/)
 
 # Add compile segment function
-set(INTERFACES daemon.c)
+set(INTERFACES daemon.c standalone.c result.c)
 list(TRANSFORM INTERFACES PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/${SRC_DIR}/)
 
 set(INTERNALS player.c)
@@ -37,8 +42,18 @@ include(${SCRIPT_DIR}/remotes.cmake)
 include(${SCRIPT_DIR}/compile_tools.cmake)
 
 set(LIB_DIR ${CMAKE_BINARY_DIR}/lib)
+set(DISABLES PA_BUILD_SHARED_LIBS)
+DisableSettings("${DISABLES}")
 
-set(DEPENDENCIES "")
+set(PA_VERSION 19.7.0)
+GetRemoteURL(
+    NAME        portaudio
+    VERSION     ${GLFW_VERSION}
+    URL         https://github.com/PortAudio/portaudio/archive/refs/tags/v${PA_VERSION}.zip
+    PARENT_DIR  ${LIB_DIR}
+)
+
+set(DEPENDENCIES portaudio_static)
 
 # Set header locations
 set(
@@ -63,8 +78,7 @@ target_link_libraries(
     ${DEPENDENCIES}
 )
 
-option(DEEPCORE_BUILD_TESTS "Enable tests" OFF)
-if(${DEEPCORE_BUILD_TESTS})
+if(${DC_BUILD_TESTS})
     message(STATUS "Tests are enabled for ${PROJECT_NAME}")
     enable_testing()
     add_subdirectory(tests)
@@ -72,16 +86,14 @@ else()
     message(STATUS "Tests are disabled for ${PROJECT_NAME}")
 endif()
 
-option(DEEPCORE_BUILD_EXAMPLES "Build example executables" OFF)
-if(${DEEPCORE_BUILD_EXAMPLES})
+if(${DC_BUILD_EXAMPLES})
     message(STATUS "Example executables are enabled for ${PROJECT_NAME}")
     add_subdirectory(examples)
 else()
     message(STATUS "Example executables are disabled for ${PROJECT_NAME}")
 endif()
 
-option(DEEPCORE_BUILD_APPS "Build executables" ON)
-if(${DEEPCORE_BUILD_APPS})
+if(${DC_BUILD_APPS})
     message(STATUS "Primary executables will be built for ${PROJECT_NAME}")
     add_subdirectory(app)
 else()

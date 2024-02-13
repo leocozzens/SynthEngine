@@ -22,10 +22,10 @@ options=""
 if [ "$1" == "$dbg" ] || [ "$2" == "$dbg" ] || [ "$3" == "$dbg" ] || [ "$4" == "$dbg" ]; then
     options+=" -DCMAKE_BUILD_TYPE=Debug"
 fi
-if [ "$1" == "$tst" ] || [ "$2" == "$tst" ] || [ "$3" == "$tst" ] || [ "$4" == "$tst"]; then
+if [ "$1" == "$tst" ] || [ "$2" == "$tst" ] || [ "$3" == "$tst" ] || [ "$4" == "$tst" ]; then
     options+=" -DSPECTRAL_BUILD_TESTS=ON"
 fi
-if [ "$1" == "$ex" ] || [ "$2" == "$ex" ] || [ "$3" == "$ex" ] || [ "$4" == "$ex"]; then
+if [ "$1" == "$ex" ] || [ "$2" == "$ex" ] || [ "$3" == "$ex" ] || [ "$4" == "$ex" ]; then
     options+=" -DSPECTRAL_BUILD_EXAMPLES=ON"
 fi
 

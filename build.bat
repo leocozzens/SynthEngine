@@ -1,4 +1,4 @@
-@REM Windows batch script to construct MSYS makefiles
+@REM Windows batch script to construct Ninja build files (PATH must contain Ninja)
 @REM Please use argument: debug for the debug build
 @REM Please use argument: regen to automatically delete the build directory and regenerate makefiles
 @REM Please use argument: tests to include tests in the build
@@ -9,7 +9,7 @@
 
 @ECHO OFF
 
-SET target="MSYS Makefiles"
+SET target="Ninja"
 SET dir=build
 SET dbg=debug
 SET tst=tests
@@ -49,7 +49,7 @@ if "%4" == "%ex%" SET EXAMPLE_SETTING= -DSPECTRAL_BUILD_EXAMPLES=ON
 cmake . -B %dir% -G %target%%DEBUG_SETTING%%TEST_SETTING%%EXAMPLE_SETTING%
 
 CD %dir%
-make
+ninja
 
 ECHO.
 ECHO Output located in %cd%

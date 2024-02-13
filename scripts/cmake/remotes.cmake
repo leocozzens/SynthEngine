@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 3.27.9)
-
 function(GetRemoteURL)
     cmake_parse_arguments(REMOTE "" "NAME;VERSION;URL;PARENT_DIR" "" ${ARGN})
 
