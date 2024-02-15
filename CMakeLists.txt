@@ -27,10 +27,10 @@ message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 set(SRC_DIR src/)
 
 # Add compile segment function
-set(INTERFACES daemon.c standalone.c result.c)
+set(INTERFACES daemon.c fmt.c player.c result.c stream_info.c)
 list(TRANSFORM INTERFACES PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/${SRC_DIR}/)
 
-set(INTERNALS player.c)
+set(INTERNALS endint.c fileio.c serializer.c)
 list(TRANSFORM INTERNALS PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/${SRC_DIR}/internal/)
 
 set(MODULES ${INTERNALS} ${INTERFACES})

@@ -1,5 +1,6 @@
 // Standard C headers
 #include <string.h>
+#include <errno.h>
 // Local headers
 #include <DC/result.h>
 
@@ -12,9 +13,6 @@
 // Standard results
 const Result STANDARD_SUCCESS = SUCCESS_RESULT(STANDARD_SUCCESS_MSG);
 const Result STANDARD_FAILURE = ERROR_RESULT(STANDARD_ERROR_MSG);
-
-// Window results
-const Result WINDOW_CLOSE_SUCCESS = SUCCESS_RESULT("Window closed gracefully");
 
 Result create_result(int code, const char *msg) {
     if(msg == NULL) {
@@ -37,7 +35,7 @@ Result create_error_result(const char *msg) {
     return newResult;
 }
 
-bool result_is_error(Result target) {
-    if(target.code == EXIT_SUCCESS) return false;
-    return true;
+Result result_from_errno(void) {
+    if(errno == 0) return STANDARD_SUCCESS;
+    return (Result) { errno, strerror(errno) };
 }

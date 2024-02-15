@@ -34,7 +34,7 @@ static int paOutCallback(const void *inputBuff, void *outBuff,
 static PaStreamParameters currentDevice;
 static DualPhase data;
 
-Result init_player(void) {
+Result dc_init_player(void) {
     PaError e = Pa_Initialize();
     CHECK(e);
 
@@ -46,13 +46,13 @@ Result init_player(void) {
     return create_success_result("Succesfully initialized player");
 }
 
-Result terminate_player(void) {
+Result dc_terminate_player(void) {
     PaError e = Pa_Terminate();
     CHECK(e);
     return create_success_result("Succesfully terminated player");
 }
 
-Result set_player_device(const char *deviceName) {
+Result dc_set_player_device(const char *deviceName) {
     PaDeviceIndex deviceCount = Pa_GetDeviceCount();
     if(deviceCount < 0) return create_error_result("Failed to get information about audio devices");
     if(deviceCount == 0) return create_error_result("No audio devices found");
@@ -67,7 +67,7 @@ Result set_player_device(const char *deviceName) {
     return create_success_result("Set desired device to current");
 }
 
-Result player_run(void) {
+Result dc_player_run(void) {
     PaError e;
     PaStream *oStream;
 
@@ -77,7 +77,7 @@ Result player_run(void) {
         &currentDevice,
         SAMPLE_RATE,
         FRAMES_PER_BUFFER,
-        paClipOff,
+        paNoFlag,
         paOutCallback,
         &data
     );
@@ -110,7 +110,7 @@ static void set_current_device(PaDeviceIndex index) {
         return;
     }
     currentDevice.device = index;
-    currentDevice.channelCount = 2;
+    currentDevice.channelCount = Pa_GetDeviceInfo(index)->maxOutputChannels;
     currentDevice.sampleFormat = paFloat32;
     currentDevice.suggestedLatency = Pa_GetDeviceInfo(index)->defaultLowOutputLatency;
     currentDevice.hostApiSpecificStreamInfo = NULL;
