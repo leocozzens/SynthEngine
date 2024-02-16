@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <errno.h>
 // Project headers
-#include <DC/result.h>
-#include <DC/stream_info.h>
+#include <SE/result.h>
+#include <SE/stream_info.h>
 // Internal headers
 #include <fio.h>
 

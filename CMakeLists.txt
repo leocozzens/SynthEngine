@@ -4,7 +4,7 @@ if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.18)
     cmake_policy(SET CMP0135 NEW)
 endif()
 # Project data
-project(DynamiComposer VERSION 0.1.0 LANGUAGES C)
+project(SynthEngine VERSION 0.1.0 LANGUAGES C)
 
 # User options
 option(DC_BUILD_TESTS "Enable tests" OFF)
@@ -48,7 +48,7 @@ DisableSettings("${DISABLES}")
 set(PA_VERSION 19.7.0)
 GetRemoteURL(
     NAME        portaudio
-    VERSION     ${GLFW_VERSION}
+    VERSION     ${PA_VERSION}
     URL         https://github.com/PortAudio/portaudio/archive/refs/tags/v${PA_VERSION}.zip
     PARENT_DIR  ${LIB_DIR}
 )

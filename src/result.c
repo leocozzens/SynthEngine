@@ -5,7 +5,7 @@
 #include <string.h>
 #include <errno.h>
 // Local headers
-#include <DC/result.h>
+#include <SE/result.h>
 
 // TODO: Custom allocator support
 // TODO: Make cycle result function/macro

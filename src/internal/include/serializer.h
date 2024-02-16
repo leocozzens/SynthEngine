@@ -1,5 +1,5 @@
-#ifndef DC_SERIALIZER_H
-#define DC_SERIALIZER_H
+#ifndef SE_SERIALIZER_H
+#define SE_SERIALIZER_H
 
 // Forward declarations
 struct Result;

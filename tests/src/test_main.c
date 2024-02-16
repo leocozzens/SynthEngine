@@ -6,7 +6,6 @@
 // #include <test.h>
 // Local test headers
 #include <test_errors.h>
-#include <array_tests.h>
 
 #define STRINGIZE(_x)                   #_x
 #define CHECK_AND_RUN(_target, _test)   if(string_compare(_target, STRINGIZE(_test))) RUN_TEST(_test)

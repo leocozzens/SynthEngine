@@ -1,5 +1,5 @@
-#ifndef DC_ENDINT_H
-#define DC_ENDINT_H
+#ifndef SE_ENDINT_H
+#define SE_ENDINT_H
 
 #include <stdint.h>
 

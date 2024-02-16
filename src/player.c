@@ -5,15 +5,15 @@
 // External libraries
 #include <portaudio.h>
 // Project headers
-#include <DC/result.h>
+#include <SE/result.h>
 
 #ifndef M_PI
-#define M_PI         (3.14159265)
+#define M_PI                (3.14159265)
 #endif
 #define SAMPLE_RATE         (44100)
 #define FRAMES_PER_BUFFER   (512)
 
-#define CHECK(_error) if(_error != paNoError) return create_result(_error, Pa_GetErrorText(_error))
+#define CHECK(_error, _msg) if(_error != paNoError) return create_result(_error, _msg)
 
 #define TABLE_SIZE   (200)
 typedef struct {
@@ -34,9 +34,9 @@ static int paOutCallback(const void *inputBuff, void *outBuff,
 static PaStreamParameters currentDevice;
 static DualPhase data;
 
-Result *dc_init_player(void) {
+Result *se_init_player(void) {
     PaError e = Pa_Initialize();
-    CHECK(e);
+    CHECK(e, "Failed to initialized player: %s", Pa_GetErrorText(e));
 
     set_current_device(paNoDevice);
     for(int i = 0; i < TABLE_SIZE; i++)
@@ -46,13 +46,13 @@ Result *dc_init_player(void) {
     return create_success_result("Succesfully initialized player");
 }
 
-Result *dc_terminate_player(void) {
+Result *se_terminate_player(void) {
     PaError e = Pa_Terminate();
-    CHECK(e);
+    CHECK(e, "Encountered error terminating player instance: %s", Pa_GetErrorText(e));
     return create_success_result("Succesfully terminated player");
 }
 
-Result *dc_set_player_device(const char *deviceName) {
+Result *se_set_player_device(const char *deviceName) {
     PaDeviceIndex deviceCount = Pa_GetDeviceCount();
     if(deviceCount < 0) return create_error_result("Failed to get information about audio devices");
     if(deviceCount == 0) return create_error_result("No audio devices found");
@@ -60,14 +60,14 @@ Result *dc_set_player_device(const char *deviceName) {
     PaDeviceIndex targetDeviceIndex = find_device(deviceName, deviceCount);
     if(targetDeviceIndex == paNoDevice)
         return create_error_result("Could not find audio device");
-    
+
     print_device_info(Pa_GetDeviceInfo(targetDeviceIndex));
     set_current_device(targetDeviceIndex);
 
     return create_success_result("Set desired device to current");
 }
 
-Result *dc_player_run(void) {
+Result *se_player_run(void) {
     PaError e;
     PaStream *oStream;
 
