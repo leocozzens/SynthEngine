@@ -19,7 +19,7 @@ typedef enum {
     #undef X
 } AudioFormat;
 
-Result dc_load_file(const char *path, AudioFormat fmt, SoundStream **newSound);
-Result dc_load_from_mem(ByteStream in, AudioFormat userFmt, SoundStream **newSound);
+Result *dc_load_file(const char *path, AudioFormat fmt, SoundStream **newSound);
+Result *dc_load_from_mem(ByteStream *in, AudioFormat userFmt, SoundStream **newSound);
 
 #endif

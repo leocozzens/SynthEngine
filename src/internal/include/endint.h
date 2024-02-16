@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-uint32_t h_to_le32(uint32_t h);
-uint32_t le32_to_h(uint32_t le);
+uint32_t h_to_le32(uint32_t target);
+uint32_t le32_to_h(uint32_t target);
 
 #endif

@@ -1,11 +1,13 @@
 #ifndef DC_STREAM_INFO_H
 #define DC_STREAM_INFO_H
 
+#include <stddef.h>
+
 typedef unsigned char Byte;
 
 typedef struct ByteStream {
     Byte *bytes;
-    long size;
+    size_t size;
 } ByteStream;
 
 typedef struct SoundStream {

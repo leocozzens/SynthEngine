@@ -18,11 +18,12 @@
 
 // Operation macros
 #define OPERATION_LENGTH        opLen
-#define CHECK_SIZE(_raw, _curr) if((_curr) + (OPERATION_LENGTH) > (_raw).size) return FORMAT_FAILURE
+#define CHECK_SIZE(_raw, _curr) if((_curr) + (OPERATION_LENGTH) > (_raw).size) return result_from_template(&FORMAT_FAILURE)
 #define ADD_OPERATION(_curr)    _curr += OPERATION_LENGTH; 
 
 // Results
-const Result FORMAT_FAILURE = { FMT(INVALID), "Invalid audio data format" };
+static const Result FORMAT_FAILURE = { FMT(INVALID), "Invalid audio data format" };
+// static const Result SIZE_FAILURE = { FMT(INVALID), "Invalid file size: %zu. Expected file size: %zu" }
 
 // Identifiers
 STR_ID(FILE_ID(WAV), "RIFF");
@@ -30,26 +31,39 @@ STR_ID(FMT_ID(WAV), "WAVE");
 // TMP
 #include <stdio.h>
 
-Result deserialize_wav(ByteStream raw, SoundStream **newSound) {
+// TODO: Descriptive expected file size
+// static size_t check_size(ByteStream *raw, size_t tracker, size_t opSize) {
+//     return raw->bytes - (tracker + opSize);
+// }
+
+// static bool parse_segment(ByteStream *raw, Byte *segment, size_t *tracker, size_t opSize) {
+//     if(*tracker + opSize > raw->size) return false;
+
+//     int comparison = memcmp(raw->bytes + tracker, segment, opSize);
+//     *tracker += opSize;
+//     return (comparison == 0) ? true : false;
+// }
+
+Result *deserialize_wav(ByteStream *raw, SoundStream **newSound) {
     size_t tracker = 0;
     size_t OPERATION_LENGTH;
 
     OPERATION_LENGTH = S_LEN(FILE_ID(WAV));
-    CHECK_SIZE(raw, tracker);
+    CHECK_SIZE(*raw, tracker);
 
-    if(memcmp(&raw.bytes[tracker], FILE_ID(WAV), OPERATION_LENGTH) != 0) return FORMAT_FAILURE;
+    if(memcmp(&raw->bytes[tracker], FILE_ID(WAV), OPERATION_LENGTH) != 0) return result_from_template(&FORMAT_FAILURE);
     ADD_OPERATION(tracker);
 
     OPERATION_LENGTH = sizeof(uint32_t);
-    CHECK_SIZE(raw, tracker);
+    CHECK_SIZE(*raw, tracker);
 
-    uint32_t chunkSize = le32_to_h(INTERPRET_AS(uint32_t, raw.bytes[tracker]));
+    uint32_t chunkSize = le32_to_h(INTERPRET_AS(uint32_t, raw->bytes[tracker]));
     ADD_OPERATION(tracker);
 
-    if(chunkSize != raw.size - tracker) return FORMAT_FAILURE;
+    if(chunkSize != raw->size - tracker) return result_from_template(&FORMAT_FAILURE);
     
     OPERATION_LENGTH = S_LEN(FMT_ID(WAV));
-    if(memcmp(&raw.bytes[tracker], FMT_ID(WAV), OPERATION_LENGTH) != 0) return FORMAT_FAILURE;
+    if(memcmp(&raw->bytes[tracker], FMT_ID(WAV), OPERATION_LENGTH) != 0) return result_from_template(&FORMAT_FAILURE);
     ADD_OPERATION(tracker);
 
 
@@ -58,7 +72,7 @@ Result deserialize_wav(ByteStream raw, SoundStream **newSound) {
     chunkSize,
     FMT_ID(WAV));
 
-    return FORMAT_FAILURE;
+    return result_from_template(&FORMAT_FAILURE);
 }
 
 

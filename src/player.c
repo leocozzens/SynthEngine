@@ -13,7 +13,7 @@
 #define SAMPLE_RATE         (44100)
 #define FRAMES_PER_BUFFER   (512)
 
-#define CHECK(_error) if(_error != paNoError) return (Result) { _error, Pa_GetErrorText(_error) }
+#define CHECK(_error) if(_error != paNoError) return create_result(_error, Pa_GetErrorText(_error))
 
 #define TABLE_SIZE   (200)
 typedef struct {
@@ -34,7 +34,7 @@ static int paOutCallback(const void *inputBuff, void *outBuff,
 static PaStreamParameters currentDevice;
 static DualPhase data;
 
-Result dc_init_player(void) {
+Result *dc_init_player(void) {
     PaError e = Pa_Initialize();
     CHECK(e);
 
@@ -46,13 +46,13 @@ Result dc_init_player(void) {
     return create_success_result("Succesfully initialized player");
 }
 
-Result dc_terminate_player(void) {
+Result *dc_terminate_player(void) {
     PaError e = Pa_Terminate();
     CHECK(e);
     return create_success_result("Succesfully terminated player");
 }
 
-Result dc_set_player_device(const char *deviceName) {
+Result *dc_set_player_device(const char *deviceName) {
     PaDeviceIndex deviceCount = Pa_GetDeviceCount();
     if(deviceCount < 0) return create_error_result("Failed to get information about audio devices");
     if(deviceCount == 0) return create_error_result("No audio devices found");
@@ -67,27 +67,27 @@ Result dc_set_player_device(const char *deviceName) {
     return create_success_result("Set desired device to current");
 }
 
-Result dc_player_run(void) {
+Result *dc_player_run(void) {
     PaError e;
     PaStream *oStream;
 
-    e = Pa_OpenStream(
-        &oStream,
-        NULL,
-        &currentDevice,
-        SAMPLE_RATE,
-        FRAMES_PER_BUFFER,
-        paNoFlag,
-        paOutCallback,
-        &data
-    );
-    CHECK(e);
-    e = Pa_StartStream(oStream);
-    CHECK(e);
-    printf("Play for %d seconds.\n", 1);
-    Pa_Sleep(1 * 1000);
-    Pa_StopStream(oStream);
-    Pa_CloseStream(oStream);
+    // e = Pa_OpenStream(
+    //     &oStream,
+    //     NULL,
+    //     &currentDevice,
+    //     SAMPLE_RATE,
+    //     FRAMES_PER_BUFFER,
+    //     paNoFlag,
+    //     paOutCallback,
+    //     &data
+    // );
+    // CHECK(e);
+    // e = Pa_StartStream(oStream);
+    // CHECK(e);
+    // printf("Play for %d seconds.\n", 1);
+    // Pa_Sleep(1 * 1000);
+    // Pa_StopStream(oStream);
+    // Pa_CloseStream(oStream);
     return create_success_result("Played succesfully");
 }
 

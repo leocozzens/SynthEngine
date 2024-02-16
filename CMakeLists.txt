@@ -30,7 +30,7 @@ set(SRC_DIR src/)
 set(INTERFACES daemon.c fmt.c player.c result.c stream_info.c)
 list(TRANSFORM INTERFACES PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/${SRC_DIR}/)
 
-set(INTERNALS endint.c fileio.c serializer.c)
+set(INTERNALS endint.c fio.c serializer.c)
 list(TRANSFORM INTERNALS PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/${SRC_DIR}/internal/)
 
 set(MODULES ${INTERNALS} ${INTERFACES})

@@ -1,29 +1,36 @@
 // C standard headers
 #include <stdbool.h>
-#include <stdint.h>
 #include <stddef.h>
+// Internal headers
+#include <endint.h>
 
-#define SAMPLE_VAL  1
-
-static bool big_endian(uint32_t sample) {
-    return (*((char*)&sample)) ? true : false;
+#define TO_OR_FROM_BIG_ENDIAN(_name, _type, _byte)                  \
+_type _name(_type target) {                                         \
+    _type sample = (_type) _byte;                                   \
+    if(*((unsigned char*) &sample) == _byte)                        \
+        swap_byte_order((unsigned char *) &target, sizeof(_type))   \
+    return target;                                                  \
 }
 
-uint32_t h_to_le32(uint32_t h) {
-    return 0;
+#define TO_OR_FROM_LITTLE_ENDIAN(_name, _type, _byte)               \
+_type _name(_type target) {                                         \
+    _type sample = (_type) _byte;                                   /*Test this line*/ \
+    if(*((unsigned char*) &sample) != _byte)                        \
+        swap_byte_order((unsigned char *) &target, sizeof(_type));  \
+    return target;                                                  \
 }
 
+#define LOCAL_SAMPLE_BYTE 0x11
 
-// Create per type macro
-uint32_t le32_to_h(uint32_t le) {
-    if(big_endian(SAMPLE_VAL)) return le;
+static void swap_byte_order(unsigned char *data, size_t typeSize);
 
-    unsigned char *data = ((unsigned char*) &le);
-    for(size_t i = 0; i < sizeof(uint32_t) / 2; i++) {
-        uint32_t tmp = data[i];
-        data[i] = data[sizeof(uint32_t) - i - 1];
-        data[sizeof(uint32_t) - i - 1] = tmp;
+TO_OR_FROM_LITTLE_ENDIAN(le32_to_h, uint32_t, LOCAL_SAMPLE_BYTE)
+TO_OR_FROM_LITTLE_ENDIAN(h_to_le32, uint32_t, LOCAL_SAMPLE_BYTE)
+
+static void swap_byte_order(unsigned char *data, size_t typeSize) {
+    for(size_t i = 0; i < typeSize / 2; i++) {
+        unsigned char tmp = data[i];
+        data[i] = data[typeSize - i - 1];
+        data[typeSize - i - 1] = tmp;
     }
-    
-    return le;
 }
