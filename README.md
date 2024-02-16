@@ -1,5 +1,5 @@
 <h1 align="center">
-    <strong>Spectral</strong>
+    <strong>SynthEngine</strong>
     <br>
     <img alt="release" src="https://img.shields.io/badge/release-v0.1.0-blue"/>
     <a href="https://github.com/leocozzens/Spectral/blob/rebuild/LICENSE">
@@ -11,7 +11,7 @@
     <img alt="tests" src="https://img.shields.io/badge/tests-0-32C955"/>
     <img alt="tests" src="https://img.shields.io/badge/coverage-0%25-32C955"/>
 </h1>
-A flexible-mode C based GUI library made with GLFW and OpenGL.
+Daemonized audio playback and synthesis engine using PortAudio and built in C.
 
 An in-depth paragraph about your project and overview of use.
 
@@ -23,10 +23,8 @@ An in-depth paragraph about your project and overview of use.
 ### Dependencies
 #### Compile dependencies
 ---
-* __GLFW__ >3.3.9
-    - Windowing framework.
-* __glad__
-    - Loader for OpenGL function pointers.
+* __PortAudio__ >19.7.0
+    - Cross-platform audio I/O
 * __Unity__
     - Minimal testing framework used to establish tests
 #### Runtime Dependencies

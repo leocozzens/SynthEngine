@@ -1,5 +1,5 @@
-#include <DC/daemon.h>
+#include <SE/daemon.h>
 
 int main(void) {
-   dc_daemon_test("Test successful!");
+   se_daemon_test("Test successful!");
 }
