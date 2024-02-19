@@ -5,7 +5,7 @@
 struct Result;
 struct ByteStream;
 
-struct Result *fio_load_bytes(const char *path, struct ByteStream **newBytes);
+struct Result fio_load_bytes(const char *path, struct ByteStream **newBytes);
 void fio_free_bytes(struct ByteStream **b);
 
 #endif

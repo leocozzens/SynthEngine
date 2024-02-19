@@ -6,6 +6,6 @@ struct Result;
 struct ByteStream;
 struct SoundStream;
 
-struct Result *deserialize_wav(struct ByteStream *raw, struct SoundStream **newSound);
+struct Result deserialize_wav(struct ByteStream *raw, struct SoundStream **newSound);
 
 #endif

@@ -5,21 +5,21 @@
 #include <SE/fmt.h>
 
 
-#define CHECK_ERR(_res, _fmt)   if(IS_FAILURE(*_res)) {                                 \
-                                    fprintf(stderr, _fmt, (_res)->code, (_res)->msg);   \
-                                    int code = (_res)->code;                            \
+#define CHECK_ERR(_res, _fmt)   if(IS_FAILURE(_res)) {                                  \
+                                    fprintf(stderr, _fmt, (_res).code, (_res).msg);     \
+                                    int code = (_res).code;                             \
                                     return code;                                        \
                                 }
 
 #define PLAYER_ERR_FMT          "PLAYER ERROR %d: %s\n"
 
 int main(int argc, char **argv) {
-    Result *procRes;
+    Result procRes;
     procRes = se_init_player();
     CHECK_ERR(procRes, PLAYER_ERR_FMT);
 
     procRes = se_set_player_device(NULL);
-    char *tmp = procRes->msg;
+    char *tmp = procRes.msg;
     CHECK_ERR(procRes, PLAYER_ERR_FMT);
     printf("%s - Default\n", tmp);
 

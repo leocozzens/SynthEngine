@@ -13,7 +13,7 @@
 #define SAMPLE_RATE         (44100)
 #define FRAMES_PER_BUFFER   (512)
 
-#define CHECK(_error, _msg) if(_error != paNoError) return create_result(_error, _msg)
+#define CHECK(_error, _fmt, ...) if(_error != paNoError) return create_result(_error, _fmt, __VA_ARGS__)
 
 #define TABLE_SIZE   (200)
 typedef struct {
@@ -34,7 +34,7 @@ static int paOutCallback(const void *inputBuff, void *outBuff,
 static PaStreamParameters currentDevice;
 static DualPhase data;
 
-Result *se_init_player(void) {
+Result se_init_player(void) {
     PaError e = Pa_Initialize();
     CHECK(e, "Failed to initialized player: %s", Pa_GetErrorText(e));
 
@@ -46,13 +46,13 @@ Result *se_init_player(void) {
     return create_success_result("Succesfully initialized player");
 }
 
-Result *se_terminate_player(void) {
+Result se_terminate_player(void) {
     PaError e = Pa_Terminate();
     CHECK(e, "Encountered error terminating player instance: %s", Pa_GetErrorText(e));
     return create_success_result("Succesfully terminated player");
 }
 
-Result *se_set_player_device(const char *deviceName) {
+Result se_set_player_device(const char *deviceName) {
     PaDeviceIndex deviceCount = Pa_GetDeviceCount();
     if(deviceCount < 0) return create_error_result("Failed to get information about audio devices");
     if(deviceCount == 0) return create_error_result("No audio devices found");
@@ -67,7 +67,7 @@ Result *se_set_player_device(const char *deviceName) {
     return create_success_result("Set desired device to current");
 }
 
-Result *se_player_run(void) {
+Result se_player_run(void) {
     PaError e;
     PaStream *oStream;
 

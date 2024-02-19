@@ -44,7 +44,7 @@ STR_ID(FMT_ID(WAV), "WAVE");
 //     return (comparison == 0) ? true : false;
 // }
 
-Result *deserialize_wav(ByteStream *raw, SoundStream **newSound) {
+Result deserialize_wav(ByteStream *raw, SoundStream **newSound) {
     size_t tracker = 0;
     size_t OPERATION_LENGTH;
 

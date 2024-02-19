@@ -12,7 +12,7 @@
 
 #define CHECK_SERVICE(_serv, _file) if((_serv) == -1) { fclose(_file); return result_from_errno(); }
 
-Result *fio_load_bytes(const char *path, ByteStream **newBytes) {
+Result fio_load_bytes(const char *path, ByteStream **newBytes) {
     // TODO: switch to lower level open/close OS calls for file support above 2G
     *newBytes = NULL;
     FILE *target = fopen(path, BINARY_READ);
