@@ -17,9 +17,16 @@
                                         (NO_MESSAGE(_res)) ? strerror(errno) : ""       \
                                     )                                                   \
 
+static union {
+    struct {
+        bool playerInit;
+    };
+    bool flags[1];
+} cleanupFlags;
+
 int main(int argc, char **argv) {
     Result procRes = STANDARD_EMPTY;
-    CYCLE_IF_OK(se_init_player(), procRes);
+    CYCLE_IF_OK(se_init_player(), procRes), cleanupFlags.playerInit = true;
     CYCLE_IF_OK(se_set_player_device(NULL), procRes);
 
     IF_OK(procRes) printf("%s - Default\n", procRes.msg);
@@ -27,9 +34,14 @@ int main(int argc, char **argv) {
 
     SoundStream *s;
     CYCLE_IF_OK(se_load_file("../assets/wav/test.wav", WAV_FMT, &s), procRes);
-    CYCLE_IF_OK(se_terminate_player(), procRes);
+    CYCLE_IF_OK(se_terminate_player(), procRes), cleanupFlags.playerInit = false;
 
+    // Error diagnostic
     if(IS_FAILURE(procRes)) PRINT_ERR(procRes);
+    // Cleanup
+    if(cleanupFlags.playerInit)
+        se_terminate_player();
     wipe_result(&procRes);
+    
     return procRes.code;
 }
