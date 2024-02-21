@@ -9,8 +9,6 @@
 
 #define CYCLE_RESULT(_proc, _res)               wipe_result(&(_res));               \
                                                 _res = _proc
-#define VALIDATE_RESULT(_proc, _res, _actions)  CYCLE_RESULT(_proc, _res);          \
-                                                if(IS_FAILURE(_res)) { _actions; }
 
 typedef struct Result {
     int code;

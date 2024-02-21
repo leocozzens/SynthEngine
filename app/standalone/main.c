@@ -16,40 +16,34 @@
 
 int main(int argc, char **argv) {
     Result procRes = STANDARD_EMPTY;
-    VALIDATE_RESULT(
-        se_init_player(),
-        procRes,
-        ERR_AND_DIE(procRes)
-    );
+    CYCLE_RESULT(se_init_player(), procRes);
+    if(IS_FAILURE(procRes)) { ERR_AND_DIE(procRes); }
 
-    VALIDATE_RESULT(
-        se_set_player_device(NULL),
-        procRes,
+    CYCLE_RESULT(se_set_player_device(NULL), procRes);
+    if(IS_FAILURE(procRes)) {
         ignore_result(se_terminate_player());
-        ERR_AND_DIE(procRes)
-    );
+        ERR_AND_DIE(procRes);
+    }
     printf("%s - Default\n", procRes.msg);
 
-    VALIDATE_RESULT(
-        se_player_run(),
-        procRes,
+    CYCLE_RESULT(se_player_run(), procRes);
+    if(IS_FAILURE(procRes)) {
         ignore_result(se_terminate_player());
-        ERR_AND_DIE(procRes)
-    );
+        ERR_AND_DIE(procRes);
+    }
 
     SoundStream *s;
-    VALIDATE_RESULT(
-        se_load_file("../assets/wav/test.wav", WAV_FMT, &s),
-        procRes,
+    CYCLE_RESULT(se_load_file("../assets/wav/test.wav", WAV_FMT, &s), procRes);
+    if(IS_FAILURE(procRes)) {
         ignore_result(se_terminate_player());
-        ERR_AND_DIE(procRes)
-    );
+        ERR_AND_DIE(procRes);
+    }
 
-    VALIDATE_RESULT(
-        se_terminate_player(),
-        procRes,
-        ERR_AND_DIE(procRes)
-    );
+    CYCLE_RESULT(se_terminate_player(), procRes);
+    if(IS_FAILURE(procRes)) {
+        ignore_result(se_terminate_player());
+        ERR_AND_DIE(procRes);
+    }
 
     wipe_result(&procRes);
     return 0;

@@ -13,7 +13,8 @@ static const Result UNKNOWN_FAILURE = { FMT(INVALID), "Unknown audio format" };
 Result se_load_file(const char *path, AudioFormat fmt, SoundStream **newSound) {
     ByteStream *fileBytes;
     Result res = STANDARD_EMPTY;
-    VALIDATE_RESULT(fio_load_bytes(path, &fileBytes), res, return res);
+    CYCLE_RESULT(fio_load_bytes(path, &fileBytes), res);
+    if(IS_FAILURE(res)) return res;
 
     CYCLE_RESULT(se_load_from_mem(fileBytes, fmt, newSound), res);
     fio_free_bytes(&fileBytes);
