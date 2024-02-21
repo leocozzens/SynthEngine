@@ -7,8 +7,8 @@
 #define IS_FAILURE(_res)    (((_res).code != 0)   ? true : false)
 #define NO_MESSAGE(_res)    (((_res).msg == NULL) ? true : false)
 
-#define VALIDATE_RESULT(_proc, _res, _actions)  wipe_result(&(_res)); \
-                                                _res = _proc; \
+#define VALIDATE_RESULT(_proc, _res, _actions)  wipe_result(&(_res));               \
+                                                _res = _proc;                       \
                                                 if(IS_FAILURE(_res)) { _actions }
 
 typedef struct Result {

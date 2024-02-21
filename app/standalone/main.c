@@ -1,49 +1,52 @@
 // C standard headers
 #include <stdio.h>
+#include <string.h>
 // Project headers
 #include <SE/player.h>
 #include <SE/fmt.h>
 
-#define PROC_RESULT     (PROC_RESULT)
-#define PLAYER_ERR_FMT  "PLAYER ERROR %d: %s\n"
-#define ERR_AND_DIE     fprintf(stderr, PLAYER_ERR_FMT, PROC_RESULT.code, PROC_RESULT.msg);     \
-                        wipe_result(&PROC_RESULT);                                              \
-                        return PROC_RESULT.code;
+#define PLAYER_ERR_FMT      "ENGINE ERROR #%d: %s%s\n"
+#define RESULT_ERR          "Failed to create error message - "
+#define ERR_AND_DIE(_res)   fprintf(stderr, PLAYER_ERR_FMT, (_res).code,        \
+                                (NO_MESSAGE(_res)) ? RESULT_ERR : (_res).msg,   \
+                                (NO_MESSAGE(_res)) ? strerror(errno) : " ");    \
+                            wipe_result(&(_res));                               \
+                            return (_res).code;
 
 int main(int argc, char **argv) {
-    Result PROC_RESULT = STANDARD_EMPTY;
+    Result procRes = STANDARD_EMPTY;
     VALIDATE_RESULT(
         se_init_player(),
-        PROC_RESULT,
-        ERR_AND_DIE
+        procRes,
+        ERR_AND_DIE(procRes)
     );
 
     VALIDATE_RESULT(
         se_set_player_device(NULL),
-        PROC_RESULT,
-        ERR_AND_DIE
+        procRes,
+        ERR_AND_DIE(procRes)
     );
-    printf("%s - Default\n", PROC_RESULT.msg);
+    printf("%s - Default\n", procRes.msg);
 
     VALIDATE_RESULT(
         se_player_run(),
-        PROC_RESULT, 
-        ERR_AND_DIE
+        procRes, 
+        ERR_AND_DIE(procRes)
     );
 
     SoundStream *s;
     VALIDATE_RESULT(
         se_load_file("../assets/wav/test.wav", WAV_FMT, &s),
-        PROC_RESULT, 
-        ERR_AND_DIE
+        procRes, 
+        ERR_AND_DIE(procRes)
     );
 
     VALIDATE_RESULT(
         se_terminate_player(),
-        PROC_RESULT,
-        ERR_AND_DIE
+        procRes,
+        ERR_AND_DIE(procRes)
     );
 
-    wipe_result(&PROC_RESULT);
+    wipe_result(&procRes);
     return 0;
 }
