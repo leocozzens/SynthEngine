@@ -3,12 +3,11 @@
 
 #include <stdbool.h>
 
-#define IS_SUCCESS(_res)    (((_res).code == 0)   ? true : false)
-#define IS_FAILURE(_res)    (((_res).code != 0)   ? true : false)
-#define NO_MESSAGE(_res)    (((_res).msg == NULL) ? true : false)
+#define IS_SUCCESS(_res)            (((_res).code == 0)   ? true : false)
+#define IS_FAILURE(_res)            (((_res).code != 0)   ? true : false)
+#define NO_MESSAGE(_res)            (((_res).msg == NULL) ? true : false)
 
-#define CYCLE_RESULT(_proc, _res)               wipe_result(&(_res));               \
-                                                _res = _proc
+#define CYCLE_RESULT(_proc, _res)   wipe_result(&(_res)), _res = _proc
 
 typedef struct Result {
     int code;
