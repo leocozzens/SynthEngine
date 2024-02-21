@@ -77,22 +77,20 @@ Result result_from_errno(void) {
     char errorBuff[ERROR_BUFFER_SIZE];
     strerror_s(errorBuff, ERROR_BUFFER_SIZE, errno);
 
-    Result NEW_RESULT = { errno, duplicate_string(errorBuff, strlen(errorBuff)) };
-    return NEW_RESULT;
+    return (Result) { errno, duplicate_string(errorBuff, strlen(errorBuff)) };
 }
 
 Result result_from_template(const Result *template) {
-    Result NEW_RESULT = {
-        template->code,
-        duplicate_string(template->msg, strlen(template->msg))
-    };
-
-    return NEW_RESULT;
+    return (Result) { template->code, duplicate_string(template->msg, strlen(template->msg)) };
 }
 
 void wipe_result(Result *target) {
     free(target->msg);
     target->msg = NULL;
+}
+
+void ignore_result(Result target) {
+    free(target.msg);
 }
 
 static char *duplicate_string(const char *restrict src, size_t len) {

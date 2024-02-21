@@ -7,9 +7,10 @@
 #define IS_FAILURE(_res)    (((_res).code != 0)   ? true : false)
 #define NO_MESSAGE(_res)    (((_res).msg == NULL) ? true : false)
 
-#define VALIDATE_RESULT(_proc, _res, _actions)  wipe_result(&(_res));               \
-                                                _res = _proc;                       \
-                                                if(IS_FAILURE(_res)) { _actions }
+#define CYCLE_RESULT(_proc, _res)               wipe_result(&(_res));               \
+                                                _res = _proc
+#define VALIDATE_RESULT(_proc, _res, _actions)  CYCLE_RESULT(_proc, _res);          \
+                                                if(IS_FAILURE(_res)) { _actions; }
 
 typedef struct Result {
     int code;
@@ -24,6 +25,7 @@ Result create_error_result(const char *msg, ...);
 Result result_from_errno(void);
 Result result_from_template(const Result *template);
 void wipe_result(Result *target);
+void ignore_result(Result target);
 
 // Standard results
 extern const Result STANDARD_SUCCESS;

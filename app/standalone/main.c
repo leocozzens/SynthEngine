@@ -4,6 +4,7 @@
 // Project headers
 #include <SE/player.h>
 #include <SE/fmt.h>
+#include <stdlib.h>
 
 #define PLAYER_ERR_FMT      "ENGINE ERROR #%d: %s%s\n"
 #define RESULT_ERR          "Failed to create error message - "
@@ -11,7 +12,7 @@
                                 (NO_MESSAGE(_res)) ? RESULT_ERR : (_res).msg,   \
                                 (NO_MESSAGE(_res)) ? strerror(errno) : " ");    \
                             wipe_result(&(_res));                               \
-                            return (_res).code;
+                            return (_res).code
 
 int main(int argc, char **argv) {
     Result procRes = STANDARD_EMPTY;
@@ -24,20 +25,23 @@ int main(int argc, char **argv) {
     VALIDATE_RESULT(
         se_set_player_device(NULL),
         procRes,
+        ignore_result(se_terminate_player());
         ERR_AND_DIE(procRes)
     );
     printf("%s - Default\n", procRes.msg);
 
     VALIDATE_RESULT(
         se_player_run(),
-        procRes, 
+        procRes,
+        ignore_result(se_terminate_player());
         ERR_AND_DIE(procRes)
     );
 
     SoundStream *s;
     VALIDATE_RESULT(
         se_load_file("../assets/wav/test.wav", WAV_FMT, &s),
-        procRes, 
+        procRes,
+        ignore_result(se_terminate_player());
         ERR_AND_DIE(procRes)
     );
 
