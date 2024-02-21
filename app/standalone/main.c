@@ -40,8 +40,8 @@ int main(int argc, char **argv) {
     if(IS_FAILURE(procRes)) PRINT_ERR(procRes);
     // Cleanup
     if(cleanupFlags.playerInit)
-        se_terminate_player();
+        ignore_result(se_terminate_player());
     wipe_result(&procRes);
-    
+
     return procRes.code;
 }
