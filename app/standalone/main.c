@@ -4,33 +4,46 @@
 #include <SE/player.h>
 #include <SE/fmt.h>
 
-
-#define CHECK_ERR(_res, _fmt)   if(IS_FAILURE(_res)) {                                  \
-                                    fprintf(stderr, _fmt, (_res).code, (_res).msg);     \
-                                    int code = (_res).code;                             \
-                                    return code;                                        \
-                                }
-
-#define PLAYER_ERR_FMT          "PLAYER ERROR %d: %s\n"
+#define PROC_RESULT     (PROC_RESULT)
+#define PLAYER_ERR_FMT  "PLAYER ERROR %d: %s\n"
+#define ERR_AND_DIE     fprintf(stderr, PLAYER_ERR_FMT, PROC_RESULT.code, PROC_RESULT.msg);     \
+                        wipe_result(&PROC_RESULT);                                              \
+                        return PROC_RESULT.code;
 
 int main(int argc, char **argv) {
-    Result procRes;
-    procRes = se_init_player();
-    CHECK_ERR(procRes, PLAYER_ERR_FMT);
+    Result PROC_RESULT = STANDARD_EMPTY;
+    VALIDATE_RESULT(
+        se_init_player(),
+        PROC_RESULT,
+        ERR_AND_DIE
+    );
 
-    procRes = se_set_player_device(NULL);
-    char *tmp = procRes.msg;
-    CHECK_ERR(procRes, PLAYER_ERR_FMT);
-    printf("%s - Default\n", tmp);
+    VALIDATE_RESULT(
+        se_set_player_device(NULL),
+        PROC_RESULT,
+        ERR_AND_DIE
+    );
+    printf("%s - Default\n", PROC_RESULT.msg);
 
-    procRes = se_player_run();
-    CHECK_ERR(procRes, PLAYER_ERR_FMT);
+    VALIDATE_RESULT(
+        se_player_run(),
+        PROC_RESULT, 
+        ERR_AND_DIE
+    );
 
     SoundStream *s;
-    procRes = se_load_file("../assets/wav/test.wav", WAV_FMT, &s);
-    CHECK_ERR(procRes, PLAYER_ERR_FMT);
+    VALIDATE_RESULT(
+        se_load_file("../assets/wav/test.wav", WAV_FMT, &s),
+        PROC_RESULT, 
+        ERR_AND_DIE
+    );
 
-    procRes = se_terminate_player();
-    CHECK_ERR(procRes, PLAYER_ERR_FMT);
+    VALIDATE_RESULT(
+        se_terminate_player(),
+        PROC_RESULT,
+        ERR_AND_DIE
+    );
+
+    wipe_result(&PROC_RESULT);
     return 0;
 }

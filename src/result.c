@@ -8,9 +8,6 @@
 #include <SE/result.h>
 
 // TODO: Custom allocator support
-// TODO: Make cycle result function/macro
-// TODO: Make return result function/macro
-
 #define NEW_RESULT                  newRes
 #define CHECK(_cond, _err)          if(_cond) { errno = _err; return NEW_RESULT; }
 #define S_LEN(_str)                 (sizeof(_str) - 1)
@@ -24,6 +21,12 @@ static char *duplicate_string(const char *restrict src, size_t len);
 
 const Result STANDARD_SUCCESS = { EXIT_SUCCESS, STANDARD_SUCCESS_MSG };
 const Result STANDARD_FAILURE = { EXIT_FAILURE, STANDARD_FAILURE_MSG };
+const Result STANDARD_EMPTY   = { EXIT_SUCCESS, NULL };
+
+Result init_result(Result *target) {
+    if(target != NULL) *target = STANDARD_EMPTY;
+    return STANDARD_EMPTY;
+}
 
 Result create_result(int code, const char *msg, ...) {
     va_list fmtArgs;
